@@ -1,25 +1,45 @@
 import { EntityRepository, Repository } from "typeorm";
 import { Recruiter } from "../../entities/recruiter.entity";
-import { Signin } from "../../user/signin";
 
 @EntityRepository(Recruiter)
 export class RecruiterRepository extends Repository<Recruiter> {
     /**
      * Create Recruiter Account
      */
-    public signIn = async (signin: Signin) => {
-        const { id, username, password, email } = signin;
+    public signUp = async (recruiter: Recruiter) => {
+        const { first_name, last_name, username, email, password, company_name, contact_tel, contact_address } = recruiter;
 
         try {
-            const recruiter = new Recruiter();
-            recruiter.id = id;
+            let recruiter = new Recruiter();
+            recruiter.first_name = first_name;
+            recruiter.last_name = last_name;
             recruiter.username = username;
             recruiter.email = email;
             recruiter.password = password;
+            recruiter.company_name   = company_name;
+            recruiter.contact_tel = contact_tel;
+            recruiter.contact_address = contact_address;
 
-            return await recruiter.save();
+            recruiter =  await recruiter.save();
+            return recruiter;
         } catch (err) {
-            return err;
+            return err.message;
+        }
+    }
+
+    /**
+     * Signin to Recruiter Account
+     */
+    public signIn = async (recruiter:Recruiter) => {
+        const { username, email, password } = recruiter;
+        const signInRecruiter = await Recruiter.find({username, email, password});
+        if (!signInRecruiter) {
+            return
+        }
+        try {
+            return await signInRecruiter;
+        } catch (error) {
+            return error.message
         }
     }
 
@@ -40,18 +60,23 @@ export class RecruiterRepository extends Repository<Recruiter> {
     /**
      * Update One Recruiter
      */
-    public updateOne =async (signin:Signin, id:number) => {
-        const { username, password, email } = signin;
-        const recruiter = await Recruiter.findOne(id)
-        if (!recruiter){
+    public updateOne =async (recruiter:Recruiter, id:number) => {
+        const { first_name, last_name, username, email, password, company_name, contact_tel, contact_address } = recruiter;
+        const updateRecruiter = await Recruiter.findOne(id)
+        if (!updateRecruiter){
             return
         }
         try {
-            recruiter.username = username;
-            recruiter.password = password;
-            recruiter.email = email;
+            updateRecruiter.first_name = first_name;
+            updateRecruiter.last_name = last_name;
+            updateRecruiter.username = username;
+            updateRecruiter.password = password;
+            updateRecruiter.email = email;
+            updateRecruiter.company_name = company_name;
+            updateRecruiter.contact_tel = contact_tel;
+            updateRecruiter.contact_address = contact_address;
 
-            return await recruiter.save();
+            return await updateRecruiter.save();
         } catch (err) {
             return err;
         }

@@ -1,4 +1,4 @@
-import { Column, Entity } from "typeorm";
+import { Column, CreateDateColumn, Entity, UpdateDateColumn } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity('seeker')
@@ -28,4 +28,10 @@ export class Seeker extends User {
         length: 100
     })
     qualification: string;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 }

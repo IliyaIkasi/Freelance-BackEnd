@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { User } from "./user.entity";
 
 @Entity('recruiter')
@@ -6,9 +6,6 @@ export class Recruiter extends User{
     
     @Column()
     company_name: string;
-
-    @Column()
-    contact_name: string;
 
     @Column({
         length: 10
@@ -20,9 +17,9 @@ export class Recruiter extends User{
     })
     contact_address: string;
 
-    @Column()
+    @CreateDateColumn()
     created_at: Date;
 
-    @Column()
+    @UpdateDateColumn()
     updated_at: Date;
 }
