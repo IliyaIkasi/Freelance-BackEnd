@@ -1,0 +1,16 @@
+Recruiter:
+	One to Many with Seeker (done)
+	delete job reference (done)
+	one to one relationship with job (done)
+
+Seeker:
+	Many to one with recruiter (done)
+	if delete seeker job null (done)
+	many to many with job (done)
+	
+
+Job:
+	one to one relationship with recruiter (done)
+	delete if recruiter is deleted (done)
+	set seeker to null if seeker is deleted (done)
+	many to many with seeker (done)

@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, Entity, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, UpdateDateColumn } from "typeorm";
+import { Job } from "./job.entity";
+import { Recruiter } from "./recruiter.entity";
 import { User } from "./user.entity";
 
 @Entity('seeker')
@@ -34,4 +36,11 @@ export class Seeker extends User {
 
     @UpdateDateColumn()
     updated_at: Date;
+
+    @ManyToOne(() => Recruiter, recruiter => recruiter.seeker)
+    @JoinColumn({ name: 'recruiter_id' })
+    recruiter: Recruiter
+
+    @ManyToMany(() => Job, job => job.seeker, {onDelete: 'SET NULL'})
+    job: Job[]
 }

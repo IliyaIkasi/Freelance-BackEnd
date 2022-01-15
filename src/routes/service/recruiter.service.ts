@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { Recruiter } from '../entities/recruiter.entity';
-import { InternalServer, InternalServer_Code, NotFound, NotFound_Code, Ok, Ok_Code } from '../status_code/status';
-import { RecruiterRepository } from './repository/recruiter.repository';
+import { Recruiter } from '../../entities/recruiter.entity';
+import { InternalServer, InternalServer_Code, NotFound, NotFound_Code, Ok, Ok_Code } from '../../status_code/status';
+import { RecruiterRepository } from '../repository/recruiter.repository';
 
 export class recruiterService {
     private readonly recruiterRepository = new RecruiterRepository();

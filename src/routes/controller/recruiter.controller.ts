@@ -1,5 +1,5 @@
 import * as express from "express";
-import { recruiterService } from "./recruiter.service";
+import { recruiterService } from "../service/recruiter.service";
 
 const router = express.Router();
 const recruiterRoute = new recruiterService();

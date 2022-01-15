@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from "typeorm";
 import { Recruiter } from "../../entities/recruiter.entity";
+import { Exists } from "../../status_code/status";
 
 @EntityRepository(Recruiter)
 export class RecruiterRepository extends Repository<Recruiter> {
@@ -8,6 +9,9 @@ export class RecruiterRepository extends Repository<Recruiter> {
      */
     public signUp = async (recruiter: Recruiter) => {
         const { first_name, last_name, username, email, password, company_name, contact_tel, contact_address } = recruiter;
+
+        const check = await Recruiter.findOne({email});
+        if(check) return Exists;
 
         try {
             let recruiter = new Recruiter();

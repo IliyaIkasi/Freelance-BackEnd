@@ -1,5 +1,5 @@
 import * as express from "express";
-import { seekerService } from "./seeker.service";
+import { seekerService } from "../service/seeker.service";
 
 const router = express.Router();
 const seekerRoute = new seekerService();

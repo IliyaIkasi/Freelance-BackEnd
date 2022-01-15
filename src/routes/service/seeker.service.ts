@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Seeker } from "../entities/seeker.entity";
-import { Created, InternalServer, InternalServer_Code, Ok, Ok_Code } from "../status_code/status";
-import { SeekerRepository } from "./repository/seeker.repository";
+import { Seeker } from "../../entities/seeker.entity";
+import { Created, Exists, Exists_Code, InternalServer, InternalServer_Code, Ok, Ok_Code } from "../../status_code/status";
+import { SeekerRepository } from "../repository/seeker.repository";
 
 export class seekerService {
     private readonly seekerRepository = new SeekerRepository();

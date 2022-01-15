@@ -1,5 +1,7 @@
+import { response } from "express";
 import { EntityRepository, Repository } from "typeorm";
 import { Seeker } from "../../entities/seeker.entity";
+import { Exists } from "../../status_code/status";
 
 @EntityRepository(Seeker)
 export class SeekerRepository extends Repository<Seeker> {
@@ -8,6 +10,10 @@ export class SeekerRepository extends Repository<Seeker> {
      */
     public signUp = async(seeker:Seeker) => {
         const { first_name, last_name, username, email, password, phone_number, location, experience, skills, qualification } = seeker;
+
+        const check = await Seeker.findOne({email});
+        if(check) return Exists;
+        
         try {
             let seeker = new Seeker();
             seeker.first_name = first_name;
