@@ -1,46 +1,45 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, UpdateDateColumn } from "typeorm";
+import {
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	ManyToMany,
+	ManyToOne,
+	UpdateDateColumn,
+} from "typeorm";
 import { Job } from "./job.entity";
 import { Recruiter } from "./recruiter.entity";
 import { User } from "./user.entity";
+import { Length } from "class-validator";
 
-@Entity('seeker')
+@Entity("seekers")
 export class Seeker extends User {
+	@Column()
+	@Length(11)
+	phone_number: string;
 
-    @Column({
-        length: 10
-    })
-    phone_number: string;
+	@Column()
+	location: string;
 
-    @Column({
-        length: 100
-    })
-    location: string;
+	@Column()
+	experience: string;
 
-    @Column({
-        length: 100
-    })
-    experience: string;
+	@Column()
+	skills: string;
 
-    @Column({
-        length: 100
-    })
-    skills: string
+	@Column()
+	qualification: string;
 
-    @Column({
-        length: 100
-    })
-    qualification: string;
+	@CreateDateColumn()
+	created_at: Date;
 
-    @CreateDateColumn()
-    created_at: Date;
+	@UpdateDateColumn()
+	updated_at: Date;
 
-    @UpdateDateColumn()
-    updated_at: Date;
+	@ManyToOne(() => Recruiter, (recruiter) => recruiter.seeker)
+	@JoinColumn({ name: "recruiter_id" })
+	recruiter: Recruiter;
 
-    @ManyToOne(() => Recruiter, recruiter => recruiter.seeker)
-    @JoinColumn({ name: 'recruiter_id' })
-    recruiter: Recruiter
-
-    @ManyToMany(() => Job, job => job.seeker, {onDelete: 'SET NULL'})
-    job: Job[]
+	@ManyToMany(() => Job, (job) => job.seeker, { onDelete: "SET NULL" })
+	job: Job[];
 }

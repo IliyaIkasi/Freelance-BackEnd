@@ -1,68 +1,72 @@
-import { EntityRepository, Repository } from "typeorm";
+import { validate } from "class-validator";
+import { EntityRepository, getManager, Repository } from "typeorm";
 import { Job } from "../../entities/job.entity";
-import { Seeker } from "../../entities/seeker.entity";
-import { Exists } from "../../status_code/status";
+import { Exists, Forbidden } from "../../status_code/status";
 
 @EntityRepository(Job)
 export class JobRepository extends Repository<Job> {
-    /**
-     * Create Job 
-     */
-    public createJob = async (job: Job) => {
-        const { id, job_title, contract_type, basic_salary, working_experience } = job;
-        const checkExist = await Job.findOne(id);
-        if (checkExist) return Exists
-        try {
-            const job = new Job();
-            job.job_title = job_title,
-            job.contract_type = contract_type,
-            job.basic_salary = basic_salary,
-            job.working_experience = working_experience
+	/**
+	 * Create Job
+	 */
+	public createJob = async (job: Job) => {
+		const { id, job_title, contract_type, basic_salary, working_experience } =
+			job;
+		const check = await Job.findOne(id);
+		if (check) return Exists;
 
-             return await job.save();
-        } catch (error) {
-            return error.message;
-        }
-    }
+		const newJob = new Job();
+		(newJob.job_title = job_title),
+			(newJob.contract_type = contract_type),
+			(newJob.basic_salary = basic_salary),
+			(newJob.working_experience = working_experience);
 
-    /**
-     * Get All Jobs
-     */
-    public fetchAll = async () => {
-        return await Job.find();
-    }
+		const error = await validate(newJob);
+		if (error.length > 0) throw new Error(Forbidden);
+		try {
+			return await getManager().save(newJob);
+		} catch (err) {
+			return err.message;
+		}
+	};
 
-    /**
-     * Get One Job
-     */
-    public fetchOne = async (id: number) => {
-        return await Job.findOne(id);
-    }
+	/**
+	 * Get All Jobs
+	 */
+	public fetchAll = async () => {
+		return await Job.find();
+	};
 
-    /**
-     * Update Job
-     */
-    public updateOne = async (job: Job, id:number) => {
-        const { job_title, contract_type, basic_salary, working_experience } = job;
-        const updateJob = await Job.findOne(id);
-        if(!updateJob) return;
-        try {
-            const updateJob = new Job();
-            updateJob.job_title = job_title;
-            updateJob.contract_type = contract_type;
-            updateJob.basic_salary = basic_salary;
-            updateJob.working_experience = working_experience;
+	/**
+	 * Get One Job
+	 */
+	public fetchOne = async (id: string) => {
+		return await Job.findOne(id);
+	};
 
-            return await updateJob.save();
-        } catch (error) {
-            error.message;
-        }
-    }
+	/**
+	 * Update Job
+	 */
+	public updateOne = async (job: Job, id: string) => {
+		const { job_title, contract_type, basic_salary, working_experience } = job;
+		const updateNewJob = await Job.findOne(id);
+		if (!updateNewJob) return;
+		const updateJob = new Job();
+		updateJob.job_title = job_title;
+		updateJob.contract_type = contract_type;
+		updateJob.basic_salary = basic_salary;
+		updateJob.working_experience = working_experience;
 
-    /**
-     * Delete One Job
-     */
-    public deleteOne = async (id: number) => {
-        return await Job.delete(id)
-    }
+		try {
+			return await updateJob.save();
+		} catch (error) {
+			error.message;
+		}
+	};
+
+	/**
+	 * Delete One Job
+	 */
+	public deleteOne = async (id: string) => {
+		return await Job.delete(id);
+	};
 }

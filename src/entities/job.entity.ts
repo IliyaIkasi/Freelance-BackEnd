@@ -1,32 +1,36 @@
-import { BaseEntity, Column, Entity, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Length } from "class-validator";
+import {
+	BaseEntity,
+	Column,
+	Entity,
+	ManyToMany,
+	OneToOne,
+	PrimaryGeneratedColumn,
+} from "typeorm";
 import { Recruiter } from "./recruiter.entity";
 import { Seeker } from "./seeker.entity";
 
-@Entity('job')
+@Entity("jobs")
 export class Job extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+	@PrimaryGeneratedColumn('uuid')
+	id: string;
 
-    @Column()
-    job_title: string;
+	@Column()
+	job_title: string;
 
-    @Column()
-    contract_type: string;
+	@Column()
+	contract_type: string;
 
-    @Column({
-        length: 10
-    })
-    basic_salary: string;
+	@Column()
+	basic_salary: string;
 
-    @Column({
-        type: 'text'
-    })
-    working_experience: string
+	@Column()
+	working_experience: string;
 
-    @ManyToMany(() => Seeker, seeker => seeker.job)
-    joinColumn: { name: 'job_id' }
-    seeker: Seeker[];
+	@ManyToMany(() => Seeker, (seeker) => seeker.job)
+	joinColumn: { name: "job_id" };
+	seeker: Seeker[];
 
-    @OneToOne(() => Recruiter, recruiter => recruiter.job)
-    recruiter: Recruiter
+	@OneToOne(() => Recruiter, (recruiter) => recruiter.job)
+	recruiter: Recruiter;
 }
