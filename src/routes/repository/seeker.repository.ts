@@ -28,7 +28,7 @@ export class SeekerRepository extends Repository<Seeker> {
 			experience,
 			skills,
 			qualification,
-			recruiter_id
+			recruiter_id,
 		} = seeker;
 
 		const check = await Seeker.findOne({ email });

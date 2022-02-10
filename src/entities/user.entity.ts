@@ -37,5 +37,5 @@ export class User extends BaseEntity {
 
 	generateAuthToken = () => {
 		return jwt.sign({ id: this.id }, IConfig.get("jwtPrivateKey"));
-	}
+	};
 }
