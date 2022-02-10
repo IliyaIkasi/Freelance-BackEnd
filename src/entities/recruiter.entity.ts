@@ -3,7 +3,6 @@ import {
 	CreateDateColumn,
 	Entity,
 	OneToMany,
-	OneToOne,
 	UpdateDateColumn,
 } from "typeorm";
 import { Job } from "./job.entity";
@@ -27,11 +26,11 @@ export class Recruiter extends User {
 	@UpdateDateColumn()
 	updated_at: Date;
 
-	@OneToMany(() => Seeker, (seeker) => seeker.recruiter, {
+	@OneToMany(() => Seeker, (seeker) => seeker.recruiter_id, {
 		onDelete: "SET NULL",
 	})
-	seeker: Seeker;
+	seeker: Seeker[	];
 
-	@OneToOne(() => Job, (job) => job.recruiter, { onDelete: "CASCADE" })
-	job: Job;
+	@OneToMany(() => Job, (job) => job.recruiter_id, { onDelete: "CASCADE" })
+	job: Job[];
 }

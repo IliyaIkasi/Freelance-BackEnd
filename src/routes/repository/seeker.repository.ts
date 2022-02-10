@@ -28,6 +28,7 @@ export class SeekerRepository extends Repository<Seeker> {
 			experience,
 			skills,
 			qualification,
+			recruiter_id
 		} = seeker;
 
 		const check = await Seeker.findOne({ email });
@@ -49,6 +50,7 @@ export class SeekerRepository extends Repository<Seeker> {
 		newSeeker.experience = experience;
 		newSeeker.skills = skills;
 		newSeeker.qualification = qualification;
+		newSeeker.recruiter_id = recruiter_id;
 
 		newSeeker.hashPassword(password);
 
@@ -84,7 +86,9 @@ export class SeekerRepository extends Repository<Seeker> {
 			};
 		}
 
-		const signInSeekerPassword = await signInSeekerByEmail.passwordValidity(password);
+		const signInSeekerPassword = await signInSeekerByEmail.passwordValidity(
+			password
+		);
 		if (!signInSeekerPassword) {
 			return {
 				success: false,

@@ -7,8 +7,9 @@ const recruiterRoute = new recruiterService();
 
 router.post("/api/recruiter/signup", recruiterRoute.signUp);
 router.post("/api/recruiter/login", recruiterRoute.signIn);
-router.get("/api/recruiter", recruiterRoute.fetchAll);
-router.get("/api/recruiter/:id", recruiterRoute.fetchOne);
+router.get("/api/recruiter/logout", recruiterRoute.signOut);
+router.get("/api/recruiter/", recruiterRoute.fetchAll);
+router.get("/api/recruiter/:id", auth, recruiterRoute.fetchOne);
 router.put("/api/recruiter/:id", auth, recruiterRoute.updateOne);
 router.delete("/api/recruiter/:id", auth, recruiterRoute.deleteOne);
 

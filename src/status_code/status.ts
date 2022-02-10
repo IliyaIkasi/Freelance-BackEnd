@@ -13,4 +13,4 @@ export const Bad_Request = 400;
 export const Invalid_Token = "Invalid Token Provided...";
 export const Exists = "User Already Exists...";
 export const Validation_Code = 403;
-export const Validation = "Validation Error...";
+export const Validation = "Invalid Username or Password";

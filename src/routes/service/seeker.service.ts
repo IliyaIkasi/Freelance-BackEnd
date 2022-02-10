@@ -12,7 +12,7 @@ import {
 	Ok_Code,
 } from "../../status_code/status";
 import { SeekerRepository } from "../repository/seeker.repository";
-import * as config from "config";
+import * as IConfig from "config";
 
 export class seekerService {
 	private readonly seekerRepository = new SeekerRepository();
@@ -25,7 +25,7 @@ export class seekerService {
 		const signUpSeeker = await this.seekerRepository.signUp(seeker);
 		try {
 			return res
-				.header(config.token_header, signUpSeeker.token)
+				.header(IConfig.get("token_header"), signUpSeeker.token)
 				.status(signUpSeeker.success ? Ok_Code : signUpSeeker.message_code)
 				.json({
 					message: signUpSeeker.success ? "Create" + Ok : signUpSeeker.message,
@@ -46,7 +46,7 @@ export class seekerService {
 		const signInSeeker = await this.seekerRepository.signIn(seeker);
 		try {
 			return res
-				.header(config.token_header, signInSeeker.token)
+				.header(IConfig.get("token_header"), signInSeeker.token)
 				.status(signInSeeker.success ? Ok_Code : signInSeeker.message_code)
 				.json({
 					message: signInSeeker.success ? "SignIn" + Ok : signInSeeker.message,
@@ -64,6 +64,9 @@ export class seekerService {
 	public fetchAll = async (req: Request, res: Response) => {
 		try {
 			const allSeeker = await this.seekerRepository.fetchAll();
+			if (allSeeker.length == 0) {
+				return res.status(NotFound_Code).json({ NotFound });
+			}
 			return res.status(Ok_Code).json({
 				message: Ok,
 				allSeeker,

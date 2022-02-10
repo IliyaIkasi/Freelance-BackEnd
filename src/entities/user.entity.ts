@@ -2,7 +2,7 @@ import { IsEmail, Length } from "class-validator";
 import { BaseEntity, Column, PrimaryGeneratedColumn } from "typeorm";
 import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
-import * as config from "config";
+import * as IConfig from "config";
 
 export class User extends BaseEntity {
 	@PrimaryGeneratedColumn("uuid")
@@ -36,6 +36,6 @@ export class User extends BaseEntity {
 	}
 
 	generateAuthToken = () => {
-		return jwt.sign({ id: this.id }, config.jwtPrivateKey);
+		return jwt.sign({ id: this.id }, IConfig.get("jwtPrivateKey"));
 	}
 }

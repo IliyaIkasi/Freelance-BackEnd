@@ -1,5 +1,5 @@
 import * as jwt from "jsonwebtoken";
-import * as config from "config";
+import * as IConfig from "config";
 import {
 	Unauthorized_Code,
 	Unauthorized,
@@ -8,15 +8,17 @@ import {
 } from "../status_code/status";
 
 function auth(req, res, next) {
-	const token = req.header(config.token_header);
-	if (!token) {
+	// const token = req.header(IConfig.get("token"));
+	const cookie_token = req.cookie(IConfig.get("token"));
+	if (!cookie_token) {
 		return res.status(Unauthorized_Code).json({
 			message: Unauthorized + ". No Token Provided",
 		});
 	}
 	try {
-		const payload = jwt.verify(token, config.get("jwtPrivateKey"));
+		const payload = jwt.verify(cookie_token, IConfig.get("jwtPrivateKey"));
 		req.user = payload;
+		console.log(cookie_token);
 		next();
 	} catch (ex) {
 		ex.message;

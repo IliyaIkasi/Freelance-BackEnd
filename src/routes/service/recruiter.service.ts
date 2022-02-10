@@ -1,10 +1,9 @@
 import { validate } from "class-validator";
-import * as config from "config";
+import * as IConfig from "config";
 import { Request, Response } from "express";
+import { getManager } from "typeorm";
 import { Recruiter } from "../../entities/recruiter.entity";
 import {
-	Forbidden,
-	Forbidden_Code,
 	InternalServer,
 	InternalServer_Code,
 	NotFound,
@@ -16,16 +15,13 @@ import { RecruiterRepository } from "../repository/recruiter.repository";
 
 export class recruiterService {
 	private readonly recruiterRepository = new RecruiterRepository();
-	// constructor() {
-	// 	this.recruiterRepository = this.recruiterRepository;
-	// }
 
 	public signUp = async (req: Request, res: Response) => {
 		const recruiter: Recruiter = req["body"];
 		const signUpRecruiter = await this.recruiterRepository.signUp(recruiter);
 		try {
 			return res
-				.header(config.token_header, signUpRecruiter.token)
+				.header(IConfig.get("token"), signUpRecruiter.token)
 				.status(
 					signUpRecruiter.success ? Ok_Code : signUpRecruiter.message_code
 				)
@@ -36,7 +32,7 @@ export class recruiterService {
 					token: signUpRecruiter.token,
 				});
 		} catch (error) {
-			console.log(error.message);
+			console.log("message => " + error.message);
 			return res.status(InternalServer_Code).json({
 				message: InternalServer,
 			});
@@ -45,10 +41,14 @@ export class recruiterService {
 
 	public signIn = async (req: Request, res: Response) => {
 		const recruiter: Recruiter = req["body"];
+		const signInRecruiter = await this.recruiterRepository.signIn(recruiter);
 		try {
-			const signInRecruiter = await this.recruiterRepository.signIn(recruiter);
 			return res
-				.header(config.token_header, signInRecruiter.token)
+				.header(IConfig.get("token"), signInRecruiter.token)
+				.cookie(IConfig.get("token"), signInRecruiter.token, {
+					httpOnly: true,
+					expires: new Date(process.env.EXPIRY_DATE),
+				})
 				.status(
 					signInRecruiter.success ? Ok_Code : signInRecruiter.message_code
 				)
@@ -66,9 +66,36 @@ export class recruiterService {
 		}
 	};
 
+	public signOut = async (req: Request, res: Response) => {
+		try {
+			// const allRecruiters = await this.recruiterRepository.fetchAll();
+			// if (allRecruiters.length == 0) {
+			// 	return res.status(NotFound_Code).json({
+			// 		message: NotFound,
+			// 	});
+			// }
+			return res
+				.clearCookie(IConfig.get("token"))
+				.status(Ok_Code)
+				.json({
+					message: Ok + "Logged Out Successfully",
+				});
+		} catch (error) {
+			console.log(error.message);
+			return res.status(InternalServer_Code).json({
+				message: InternalServer,
+			});
+		}
+	};
+
 	public fetchAll = async (req: Request, res: Response) => {
 		try {
 			const allRecruiters = await this.recruiterRepository.fetchAll();
+			if (allRecruiters.length == 0) {
+				return res.status(NotFound_Code).json({
+					message: NotFound,
+				});
+			}
 			return res.status(Ok_Code).json({
 				message: Ok,
 				allRecruiters,

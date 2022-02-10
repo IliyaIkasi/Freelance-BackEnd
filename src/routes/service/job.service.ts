@@ -20,10 +20,11 @@ export class jobService {
 		const job: Job = req["body"];
 		try {
 			const jobOffer = await this.jobRepository.createJob(job);
-			return res.status(Ok_Code).json({
-				message: "Create " + Ok,
-				jobOffer,
-			});
+			return res
+				.status(jobOffer.success ? Ok_Code : jobOffer.message_code)
+				.json({
+					message: jobOffer.success ? "Create " + Ok : jobOffer.message,
+				});
 		} catch (error) {
 			console.log(error.message);
 			return res.status(InternalServer_Code).json({

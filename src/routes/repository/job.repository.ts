@@ -1,29 +1,48 @@
 import { validate } from "class-validator";
 import { EntityRepository, getManager, Repository } from "typeorm";
 import { Job } from "../../entities/job.entity";
-import { Exists, Forbidden } from "../../status_code/status";
+import { Bad_Request, Exists, Forbidden } from "../../status_code/status";
+import { Types } from "../../util/types.util";
 
 @EntityRepository(Job)
 export class JobRepository extends Repository<Job> {
 	/**
 	 * Create Job
 	 */
-	public createJob = async (job: Job) => {
-		const { id, job_title, contract_type, basic_salary, working_experience } =
-			job;
-		const check = await Job.findOne(id);
-		if (check) return Exists;
+	public createJob = async (job: Job): Promise<Types> => {
+		const {
+			job_title,
+			contract_type,
+			basic_salary,
+			working_experience,
+			recruiter_id,
+		} = job;
+
+		//	Note => Hooks around check if exsits, cause of the id.
+		//	It creates an id before check operation and during check it sees created id and returns an exist message.
+		// const check = await Job.findOne(recruiter.id);
+		// console.log(check)
+		// if (check)
+		// 	return {
+		// 		success: false,
+		// 		message: Exists,
+		// 		message_code: Bad_Request,
+		// 	};
 
 		const newJob = new Job();
 		(newJob.job_title = job_title),
 			(newJob.contract_type = contract_type),
 			(newJob.basic_salary = basic_salary),
 			(newJob.working_experience = working_experience);
+		newJob.recruiter_id = recruiter_id;
 
-		const error = await validate(newJob);
-		if (error.length > 0) throw new Error(Forbidden);
 		try {
-			return await getManager().save(newJob);
+			const error = await validate(newJob);
+			if (error.length > 0) throw new Error(Forbidden);
+			await getManager().save(newJob);
+			return {
+				success: true,
+			};
 		} catch (err) {
 			return err.message;
 		}

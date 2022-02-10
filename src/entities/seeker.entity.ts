@@ -38,7 +38,7 @@ export class Seeker extends User {
 
 	@ManyToOne(() => Recruiter, (recruiter) => recruiter.seeker)
 	@JoinColumn({ name: "recruiter_id" })
-	recruiter: Recruiter;
+	recruiter_id: Recruiter;
 
 	@ManyToMany(() => Job, (job) => job.seeker, { onDelete: "SET NULL" })
 	job: Job[];

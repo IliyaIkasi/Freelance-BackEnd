@@ -60,6 +60,7 @@ export class RecruiterRepository extends Repository<Recruiter> {
 				token,
 			};
 		} catch (err) {
+			console.log("console => " + err.message);
 			return err.message;
 		}
 	};
@@ -74,7 +75,7 @@ export class RecruiterRepository extends Repository<Recruiter> {
 		if (!signInRecruiterByUsername || !signInRecruiterByEmail) {
 			return {
 				success: false,
-				message: "Invalid Username or Password",
+				message: Validation,
 				message_code: Validation_Code,
 			};
 		}
@@ -97,6 +98,13 @@ export class RecruiterRepository extends Repository<Recruiter> {
 		} catch (error) {
 			return error.message;
 		}
+	};
+
+	/**
+	 * Fetch All Recruiters
+	 */
+	public signOut = async () => {
+		return Recruiter.clear();
 	};
 
 	/**
@@ -131,17 +139,19 @@ export class RecruiterRepository extends Repository<Recruiter> {
 		if (!updateRecruiter) {
 			return;
 		}
-		first_name;
-		last_name;
-		username;
-		password;
-		email;
-		company_name;
-		contact_tel;
-		contact_address;
+		updateRecruiter.first_name = first_name;
+		updateRecruiter.last_name = last_name;
+		updateRecruiter.username = username;
+		updateRecruiter.password = password;
+		updateRecruiter.email = email;
+		updateRecruiter.company_name = company_name;
+		updateRecruiter.contact_tel = contact_tel;
+		updateRecruiter.contact_address = contact_address;
+
+		updateRecruiter.hashPassword(password);
 
 		try {
-			return await updateRecruiter.save();
+			return await getManager().save(updateRecruiter);
 		} catch (err) {
 			return err;
 		}

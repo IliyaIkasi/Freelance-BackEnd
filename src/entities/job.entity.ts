@@ -4,7 +4,7 @@ import {
 	Column,
 	Entity,
 	ManyToMany,
-	OneToOne,
+	ManyToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
 import { Recruiter } from "./recruiter.entity";
@@ -12,7 +12,7 @@ import { Seeker } from "./seeker.entity";
 
 @Entity("jobs")
 export class Job extends BaseEntity {
-	@PrimaryGeneratedColumn('uuid')
+	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
 	@Column()
@@ -31,6 +31,6 @@ export class Job extends BaseEntity {
 	joinColumn: { name: "job_id" };
 	seeker: Seeker[];
 
-	@OneToOne(() => Recruiter, (recruiter) => recruiter.job)
-	recruiter: Recruiter;
+	@ManyToOne(() => Recruiter, (recruiter) => recruiter.job)
+	recruiter_id: Recruiter;
 }
